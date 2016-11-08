@@ -1,3 +1,7 @@
+//Problem: Hit enter it shows all records
+//Problem: Search more than 10 per page
+//Problem: Page numbers clicked don't yield search results
+
 //Global variables
 var student = $('.student-item');
 var numberOfStudents = student.length;
@@ -20,10 +24,12 @@ function search() {
 		//no matches - show message
 		if (studentsFound.length === 0) {
 			$('.student-list').append('<h3 id="no-results">No students with that name were found.  Please try again.</h3>');
+		} else if (studentsFound.length === numberOfStudents.length) {
+			return studentShow(pageNumber);
 		} 
-	numberOfStudents = (studentsFound.length / 10);
-	numberOfPages = Math.ceil(numberOfStudents);
-	createPagination();
+		numberOfStudents = (studentsFound.length / 10);
+		numberOfPages = Math.ceil(numberOfStudents);
+		createPagination();
 }
 
 //Display Function - Show or Hide Students
@@ -45,6 +51,9 @@ function createPagination () {
 	$('.pagination').remove();
 	//create pagination
 	$('.page').append('<ul class="pagination"></ul>');
+	if (numberOfPages <= 1) {
+		return;
+	}
 	for (var i = 1; i <= numberOfPages; i++) {
 		$('.pagination').append('<li id ="' + i +'"><a href="#" id="' + i + '">' + i + '</a></li>');
 		$('.pagination').children().attr({class: "listItem"});
@@ -62,7 +71,7 @@ createPagination();
 
 //--------------Event Listeners---------------
 //User clicks page button
-$(document).on('click', 'a', function(e) {
+$(document).on('click', 'li a', function(e) {
 	$('.listItem').children().removeClass( 'active' );
 	$(this).attr({class: "active"});
 	pageNumber = $(this).attr('id');
